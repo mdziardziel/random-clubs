@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() => runApp(MyApp());
 
@@ -16,16 +17,38 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Pair {
+  String _club = '';
+  String _player = '';
+
+  Pair(String club, String player) {
+    this._club = club;
+    this._player = player;
+  }
+
+  String getPlayer() => this._player;
+  String getClub() => this._club;
+}
+
 class RandomTeamsState extends State<RandomTeams> {
-  List<String> clubs = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA', 'MANU', 'BAYERN'];
-  List<String> players = ['Tomek', 'Maciek', 'Antek', 'Jacek', 'Grześ'];
-  List<String> clubsShuffeled = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA', 'MANU', 'BAYERN'];
+  List<String> clubs = [];
+  List<String> players = [];
+  List<Pair> pairsShuffeled = [];
 
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final TextEditingController clubInputCtrl = new TextEditingController();
+  final TextEditingController playerInputCtrl = new TextEditingController();
 
-  void shuffleClubs(clubs, clubsNum) {
-    clubsShuffeled = (clubs.toList()..shuffle()).take(clubsNum).toList();
+  void shufflePairs(clubs, players) {
+    pairsShuffeled = [];
+    int pairsNum = min(clubs.length, players.length);
+    List<String> clubsShuffeled = (clubs.toList()..shuffle()).take(pairsNum).toList();
+    List<String> playersShuffeled = (players.toList()..shuffle()).take(pairsNum).toList();
+
+    for(int i = 0; i < pairsNum; i++) {
+      Pair pair = new Pair(clubsShuffeled[i], playersShuffeled[i]);
+      pairsShuffeled.add(pair);
+    }
   }
 
   @override
@@ -36,7 +59,14 @@ class RandomTeamsState extends State<RandomTeams> {
         ),
         body: Column(
           children: [
-            _clubsInput(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _clubsInput(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _playersInput(),
+            ),
             _buildPairs(),
           ]
         ),
@@ -46,10 +76,30 @@ class RandomTeamsState extends State<RandomTeams> {
   Widget _clubsInput() {
     return TextField(
       controller: clubInputCtrl,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Add club',
+      ),
       onSubmitted: (text) {
         clubs.add(text);  // Append Text to the list
-        shuffleClubs(clubs, players.length);
+        shufflePairs(clubs, players);
         clubInputCtrl.clear();     // Clear the Text area
+        setState(() {});   // Redraw the Stateful Widget
+      }
+    );
+  }
+
+    Widget _playersInput() {
+    return TextField(
+      controller: playerInputCtrl,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Add player',
+      ),
+      onSubmitted: (text) {
+        players.add(text);  // Append Text to the list
+        shufflePairs(clubs, players);
+        playerInputCtrl.clear();     // Clear the Text area
         setState(() {});   // Redraw the Stateful Widget
       }
     );
@@ -58,7 +108,7 @@ class RandomTeamsState extends State<RandomTeams> {
   Widget _buildPairs() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: players.length * 2,
+        itemCount: pairsShuffeled.length * 2,
         // https://stackoverflow.com/questions/50252569/vertical-viewport-was-given-unbounded-height
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -72,7 +122,8 @@ class RandomTeamsState extends State<RandomTeams> {
           ); /*2*/
 
           final index = i ~/ 2; /*3*/ 
-          return _buildRow(clubsShuffeled[index], players[index]);
+
+          return _buildRow(pairsShuffeled[index].getClub(), pairsShuffeled[index].getPlayer());
       });
   }
 
