@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Startup Name Generator',
+      title: 'Random clubs',
   	  home: RandomTeams()
     );
   }
@@ -55,7 +55,7 @@ class RandomTeamsState extends State<RandomTeams> {
   Widget build(BuildContext context) {    
       return Scaffold(
         appBar: AppBar(
-          title: Text('Random teams'),
+          title: Text('Random clubs'),
         ),
         body: Column(
           children: [
@@ -79,6 +79,7 @@ class RandomTeamsState extends State<RandomTeams> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Add club',
+        helperText: clubs.join(', '),
       ),
       onSubmitted: (text) {
         clubs.add(text);  // Append Text to the list
@@ -89,12 +90,13 @@ class RandomTeamsState extends State<RandomTeams> {
     );
   }
 
-    Widget _playersInput() {
+  Widget _playersInput() {
     return TextField(
       controller: playerInputCtrl,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Add player',
+        helperText: players.join(', '),
       ),
       onSubmitted: (text) {
         players.add(text);  // Append Text to the list
