@@ -35,7 +35,6 @@ class RandomTeamsState extends State<RandomTeams> {
   List<String> players = [];
   List<Pair> pairsShuffeled = [];
 
-  final _biggerFont = const TextStyle(fontSize: 18.0);
   final TextEditingController clubInputCtrl = new TextEditingController();
   final TextEditingController playerInputCtrl = new TextEditingController();
 
@@ -132,8 +131,9 @@ class RandomTeamsState extends State<RandomTeams> {
   Widget _buildRow(String team, String player) {
   return ListTile(
     title: Text(
-      '$player -> $team',
-      style: _biggerFont,
+      '$player »»» $team',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
     ),
   );
 
