@@ -17,13 +17,16 @@ class MyApp extends StatelessWidget {
 }
 
 class RandomTeamsState extends State<RandomTeams> {
-  static final teamsStart = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA', 'MANU', 'BAYERN'];
-  static final players = ['Tomek', 'Maciek', 'Antek', 'Jacek', 'Grześ'];
+  List<String> clubs = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA', 'MANU', 'BAYERN'];
+  List<String> players = ['Tomek', 'Maciek', 'Antek', 'Jacek', 'Grześ'];
+  List<String> clubsShuffeled = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA', 'MANU', 'BAYERN'];
 
-  static List<String> shuffledTeams() => (teamsStart.toList()..shuffle()).take(players.length).toList();
-
-  final _teams = shuffledTeams();
   final _biggerFont = const TextStyle(fontSize: 18.0);
+  final TextEditingController clubInputCtrl = new TextEditingController();
+
+  void shuffleClubs(clubs, clubsNum) {
+    clubsShuffeled = (clubs.toList()..shuffle()).take(clubsNum).toList();
+  }
 
   @override
   Widget build(BuildContext context) {    
@@ -31,14 +34,34 @@ class RandomTeamsState extends State<RandomTeams> {
         appBar: AppBar(
           title: Text('Random teams'),
         ),
-        body: _buildPairs(),
+        body: Column(
+          children: [
+            _clubsInput(),
+            _buildPairs(),
+          ]
+        ),
       );
+  }
+
+  Widget _clubsInput() {
+    return TextField(
+      controller: clubInputCtrl,
+      onSubmitted: (text) {
+        clubs.add(text);  // Append Text to the list
+        shuffleClubs(clubs, players.length);
+        clubInputCtrl.clear();     // Clear the Text area
+        setState(() {});   // Redraw the Stateful Widget
+      }
+    );
   }
 
   Widget _buildPairs() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: players.length * 2 - 1,
+        itemCount: players.length * 2,
+        // https://stackoverflow.com/questions/50252569/vertical-viewport-was-given-unbounded-height
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
         itemBuilder: /*1*/ (context, i) {
           if (i.isOdd) return Divider(
             color: Colors.grey[150],
@@ -49,7 +72,7 @@ class RandomTeamsState extends State<RandomTeams> {
           ); /*2*/
 
           final index = i ~/ 2; /*3*/ 
-          return _buildRow(_teams[index], players[index]);
+          return _buildRow(clubsShuffeled[index], players[index]);
       });
   }
 
@@ -60,6 +83,8 @@ class RandomTeamsState extends State<RandomTeams> {
       style: _biggerFont,
     ),
   );
+
+
 }
 }
 
