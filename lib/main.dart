@@ -21,10 +21,21 @@ class MyApp extends StatelessWidget {
           title: Text('Welcome to Flutter'),
         ),
         body: Center(
-          child: Text(shuffledTeams().toString()),
+          child: RandomTeams(),
         ),
       ),
     );
   }
 }
 
+class RandomTeamsState extends State<RandomTeams> {
+  @override
+  Widget build(BuildContext context) {
+    final teams = shuffledTeams();
+    return Text(teams.toString());
+  }}
+
+class RandomTeams extends StatefulWidget {
+  @override
+  RandomTeamsState createState() => RandomTeamsState();
+}
