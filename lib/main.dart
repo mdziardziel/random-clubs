@@ -7,6 +7,9 @@ import "dart:math";
 
 final _random = new Random();
 
+final teams = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA'];
+
+String randomTeam() => teams[_random.nextInt(teams.length)];
 
 void main() => runApp(MyApp());
 
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
           title: Text('Welcome to Flutter'),
         ),
         body: Center(
-          child: Text('Hello World'),
+          child: Text(randomTeam()),
         ),
       ),
     );
