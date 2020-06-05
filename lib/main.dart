@@ -3,6 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import "dart:math";
+
+final _random = new Random();
+
 
 void main() => runApp(MyApp());
 
@@ -22,3 +26,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
