@@ -3,13 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import "dart:math";
-
-final _random = new Random();
 
 final teams = ['BVB', 'PSG', 'JUVE', 'REAL', 'BARCA'];
+final players = ['Tomek', 'Maciek', 'Antek'];
 
-String randomTeam() => teams[_random.nextInt(teams.length)];
+List<String> shuffledTeams() => (teams.toList()..shuffle()).take(players.length).toList();
 
 void main() => runApp(MyApp());
 
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
           title: Text('Welcome to Flutter'),
         ),
         body: Center(
-          child: Text(randomTeam()),
+          child: Text(shuffledTeams().toString()),
         ),
       ),
     );
